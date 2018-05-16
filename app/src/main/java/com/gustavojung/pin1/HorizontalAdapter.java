@@ -1,47 +1,79 @@
 package com.gustavojung.pin1;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 
-public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.HorizontalViewHolder> {
-    private String[] idImages;
+import java.util.ArrayList;
 
-   public HorizontalAdapter(String[]itens){
-       this.idImages = itens;
-   }
+public class HorizontalAdapter extends  RecyclerView.Adapter<HorizontalAdapter.ViewHolder>{
 
-    @NonNull
-    @Override
-    public HorizontalAdapter.HorizontalViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.item_layout,parent,false);
-        return new HorizontalViewHolder(view);
+    private final static String TAG = "RecyclerViewAdapter";
 
+    private ArrayList<Integer> mImages = new ArrayList<>();
+    private Context mContext;
+
+    public HorizontalAdapter(Context context, ArrayList<Integer> imageUrls) {
+
+            mImages = imageUrls;
+            mContext = context;
+             }
+
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+           View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout,parent,false);
+           ViewHolder vh = new ViewHolder(view);
+           return vh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HorizontalAdapter.HorizontalViewHolder holder, int position) {
-    holder.imgView.setImageResource(Integer.parseInt(idImages[position]));
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
+        Log.d(TAG, "onBindViewHolder: called");
+        Glide.with(mContext).asBitmap().load(mImages.get(position)).into(holder.imgView);
+
+
+        holder.imgView.setImageResource(mImages.get(position));
+
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: clicked on" );
+                Toast.makeText(mContext,"Clicado", Toast.LENGTH_SHORT).show();
+                v = new View(mContext);
+                v.setBackground(holder.imgView.getDrawable());
+                Dialog dialog;
+                dialog= new Dialog(mContext);
+                dialog.setContentView(R.layout.content_clicked);
+                dialog.show();
+
+            }
+        });
+
     }
 
     @Override
     public int getItemCount() {
-        return idImages.length;
+        return mImages.size();
     }
 
 
-    public class HorizontalViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imgView;
-
-        public HorizontalViewHolder(View itemView) {
+        private LinearLayout layout;
+        private ImageView imgView;
+        public ViewHolder(View itemView) {
             super(itemView);
             imgView = itemView.findViewById(R.id.series);
+            layout = itemView.findViewById(R.id.layoutItem);
         }
     }
 }

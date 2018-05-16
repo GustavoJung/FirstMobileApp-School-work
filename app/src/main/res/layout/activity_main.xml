@@ -10,102 +10,110 @@
     tools:openDrawer="start"
     android:background="@color/colorDarkGray">
 
-
-    
-    <include
-        layout="@layout/app_bar_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="150dp">
-
-        <LinearLayout
-        android:layout_width="wrap_content"
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="5dp">
-            <SearchView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:gravity="end">
+        android:orientation="vertical">
 
-            </SearchView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Genero 1"
-            android:textStyle="bold"
-            android:textColor="@color/colrowhite"
-            android:textSize="18dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="8dp"
-            />
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            android:id = "@+id/list">
-        </android.support.v7.widget.RecyclerView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Genero 2"
-            android:textStyle="bold"
-            android:textColor="@color/colrowhite"
-            android:textSize="18dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="8dp"
-            />
-
-        <android.support.v7.widget.RecyclerView
+        <include
+            android:id="@+id/app_bar"
+            layout="@layout/app_bar_main"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:id = "@+id/list2">
-        </android.support.v7.widget.RecyclerView>
-
-        <TextView
+            android:layout_height="150dp" />
+        <SearchView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Genero 3"
-            android:textStyle="bold"
-            android:textColor="@color/colrowhite"
-            android:textSize="18dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="8dp"
-            />
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:id = "@+id/list3">
-        </android.support.v7.widget.RecyclerView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Genero 4"
-            android:textStyle="bold"
-            android:textColor="@color/colrowhite"
-            android:textSize="18dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="8dp"
-            />
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:id = "@+id/list4">
-        </android.support.v7.widget.RecyclerView>
-
+            android:gravity="end"
+            >
+        </SearchView>
 
     </LinearLayout>
+
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollview"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:padding="5dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="5dp"
+                android:text="Genero 1"
+                android:textColor="@color/colrowhite"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"></android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="5dp"
+                android:text="Genero 2"
+                android:textColor="@color/colrowhite"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list2"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"></android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="5dp"
+                android:text="Genero 3"
+                android:textColor="@color/colrowhite"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list3"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"></android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="5dp"
+                android:text="Genero 4"
+                android:textColor="@color/colrowhite"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list4"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"></android.support.v7.widget.RecyclerView>
+
+
+        </LinearLayout>
+
     </ScrollView>
+
+    </LinearLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"

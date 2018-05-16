@@ -5,6 +5,9 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/list_fav"
+            android:title="Meus Favoritos" />
+        <item
             android:id="@+id/nav_camera"
             android:title="Idioma" />
         <item

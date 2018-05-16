@@ -1,6 +1,7 @@
 package com.gustavojung.pin1;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -21,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
@@ -29,42 +30,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     Dialog myDialog;
     Spinner spinner;
-    String erro="";
 
+    private ArrayList<Integer> mImageUrls = new ArrayList<>();
+    private ArrayList<Integer> mImageUrls1 = new ArrayList<>();
+    private ArrayList<Integer> mImageUrls2 = new ArrayList<>();
+    private ArrayList<Integer> mImageUrls3 = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-         myDialog= new Dialog(this);
 
 
+
+        addImages();
+
+
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
         RecyclerView list = (RecyclerView)findViewById(R.id.list);
-        list.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL,false));
-        list.setAdapter(new HorizontalAdapter(new String[]{String.valueOf(R.drawable.gotham), String.valueOf(R.drawable.between),String.valueOf(R.drawable.dexter)}));
+        list.setLayoutManager(layoutManager);
+        list.setAdapter(new HorizontalAdapter(this,mImageUrls));
+
 
         RecyclerView list2 = (RecyclerView)findViewById(R.id.list2);
         list2.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL,false));
-        list2.setAdapter(new HorizontalAdapter(new String[]{String.valueOf(R.drawable.houseofcards),
-                String.valueOf(R.drawable.lost),String.valueOf(R.drawable.orphanblack),
-                String.valueOf(R.drawable.sherlock),String.valueOf(R.drawable.slasher)}));
+        list2.setAdapter(new HorizontalAdapter(this,mImageUrls1));
+
 
         RecyclerView list3 = (RecyclerView)findViewById(R.id.list3);
         list3.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL,false));
-        list3.setAdapter(new HorizontalAdapter(new String[]{String.valueOf(R.drawable.atypical),
-                String.valueOf(R.drawable.howimetyourmother),String.valueOf(R.drawable.lacasadepapel),
-                String.valueOf(R.drawable.santaclaritadiet),String.valueOf(R.drawable.vikings),String.valueOf(R.drawable.theranch)}));
+        list3.setAdapter(new HorizontalAdapter(this,mImageUrls2));
+
 
         RecyclerView list4 = (RecyclerView)findViewById(R.id.list4);
         list4.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL,false));
-        list4.setAdapter(new HorizontalAdapter(new String[]{String.valueOf(R.drawable.atypical),
-                String.valueOf(R.drawable.howimetyourmother),String.valueOf(R.drawable.lacasadepapel),
-                String.valueOf(R.drawable.santaclaritadiet),String.valueOf(R.drawable.vikings),String.valueOf(R.drawable.theranch)}));
-
-
-
-
+        list4.setAdapter(new HorizontalAdapter(this,mImageUrls3));
 
         Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -82,6 +84,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+    public Activity contexto(){
+        return this;
+    }
+    private void addImages(){
+        mImageUrls.add(R.drawable.gotham);
+        mImageUrls.add(R.drawable.between);
+        mImageUrls.add(R.drawable.dexter);
+
+
+        mImageUrls1.add(R.drawable.houseofcards);
+        mImageUrls1.add(R.drawable.lost);
+        mImageUrls1.add(R.drawable.orphanblack);
+        mImageUrls1.add(R.drawable.sherlock);
+        mImageUrls1.add(R.drawable.slasher);
+
+
+        mImageUrls2.add(R.drawable.atypical);
+        mImageUrls2.add(R.drawable.howimetyourmother);
+        mImageUrls2.add(R.drawable.lacasadepapel);
+        mImageUrls2.add(R.drawable.santaclaritadiet);
+        mImageUrls2.add(R.drawable.vikings);
+        mImageUrls2.add(R.drawable.theranch);
+
+
+        mImageUrls3.add(R.drawable.atypical);
+        mImageUrls3.add(R.drawable.howimetyourmother);
+        mImageUrls3.add(R.drawable.lacasadepapel);
+        mImageUrls3.add(R.drawable.santaclaritadiet);
+        mImageUrls3.add(R.drawable.vikings);
+        mImageUrls3.add(R.drawable.theranch);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -101,7 +135,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.list_fav) {
+
+            TextView txtclose;
+            myDialog.setContentView(R.layout.popup_menu1);
+            txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
+
+            txtclose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    myDialog.dismiss();
+                }
+            });
+            myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            myDialog.show();
+
+        }
+        else if (id == R.id.nav_camera) {
 
             TextView txtclose;
             myDialog.setContentView(R.layout.popup_menu1);
@@ -172,5 +222,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public void recyclerClicked(View v){
+
+
+        findViewById(R.id.img_view).setBackground(v.getBackground());
+       myDialog.setContentView((R.layout.content_clicked));
+       myDialog.show();
+    }
+
 
 }
