@@ -8,39 +8,54 @@
     android:background="@color/colorPrimaryDark"
     android:layout_gravity="center">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="wrap_content"
+
+        <TextView
+            android:id="@+id/txtcloseFilmeClicked"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="top|right"
+            android:gravity="center"
+            android:text="X"
+            android:textColor="@color/colrowhite"
+            android:textStyle="bold" />
+
+        <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/img_view"
-            android:layout_marginTop="20dp"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/sherlock"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="200dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center_horizontal"
+            />
         <TextView
-            android:layout_marginTop="60dp"
+            android:id="@+id/text_nome_serie"
+            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colrowhite"
             android:text="FILME SELECIONADO"
             android:textStyle="bold"
-            android:layout_marginLeft="20dp"
+            android:layout_gravity="center_horizontal"
             />
 
-        </LinearLayout>
+
+    </LinearLayout>
 
         <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="20dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -60,7 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -82,24 +97,18 @@
             android:orientation="horizontal"
             android:layout_marginTop="15dp">
 
-            <TextView
-                android:layout_marginTop="30dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sinopse: "
-                android:textColor="@color/colrowhite"
-                android:layout_marginLeft="10dp"/>
 
             <TextView
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Essa série conta a história de dois alunos \n da UDESC que desenvolveram esse APP."
+                android:text="Essa série conta a história de dois alunos  da UDESC que desenvolveram esse APP."
                 android:textColor="@color/colrowhite" />
         </LinearLayout>
 
        <LinearLayout
-           android:layout_marginTop="50dp"
+           android:layout_marginTop="40dp"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:orientation="horizontal">
@@ -112,7 +121,10 @@
                android:text="Marcar como favorita"/>
            <CheckBox
                android:layout_width="wrap_content"
-               android:layout_height="wrap_content" />
+               android:layout_height="wrap_content"
+               android:buttonTint="@color/colrowhite"
+               android:saveEnabled="true"
+               android:textColor="@color/colrowhite"/>
 
        </LinearLayout>
         <TextView
@@ -121,17 +133,17 @@
             android:layout_height="wrap_content"
             android:text="Avalie a série:"
             android:textColor="@color/colrowhite"
-            android:layout_marginTop="40dp"/>
+            android:layout_marginTop="5dp"/>
         <RatingBar
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="70dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:stepSize="1.0"
-            android:rating="5"
+            android:rating="0"
             android:numStars="5"
             android:progressBackgroundTint="@color/colrowhite"
             android:progressTint="@color/colorPrimary"
+            android:layout_marginBottom="5dp"
             />
 
     </LinearLayout>

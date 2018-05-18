@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        myDialog = new Dialog(this);
 
 
 
@@ -84,9 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-    public Activity contexto(){
-        return this;
-    }
+
     private void addImages(){
         mImageUrls.add(R.drawable.gotham);
         mImageUrls.add(R.drawable.between);
@@ -223,13 +223,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void recyclerClicked(View v){
 
-
-        findViewById(R.id.img_view).setBackground(v.getBackground());
-       myDialog.setContentView((R.layout.content_clicked));
-       myDialog.show();
-    }
 
 
 }
