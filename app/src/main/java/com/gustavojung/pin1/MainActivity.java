@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        myDialog = new Dialog(this);
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return this;
     }
 
-    private void addImages() {
+    private void addImages(){
         mImageUrls.add(R.drawable.gotham);
         mImageUrls.add(R.drawable.between);
         mImageUrls.add(R.drawable.dexter);
@@ -281,6 +282,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         myDialog.setContentView((R.layout.content_clicked));
         myDialog.show();
     }
-
 
 }

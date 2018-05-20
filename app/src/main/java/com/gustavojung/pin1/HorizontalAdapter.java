@@ -2,6 +2,8 @@ package com.gustavojung.pin1;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -42,17 +45,28 @@ public class HorizontalAdapter extends  RecyclerView.Adapter<HorizontalAdapter.V
 
 
         holder.imgView.setImageResource(mImages.get(position));
+      final  int imagem = mImages.get(position);
 
-        holder.layout.setOnClickListener(new View.OnClickListener() {
+      holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: clicked on" );
                 Toast.makeText(mContext,"Clicado", Toast.LENGTH_SHORT).show();
-                v = new View(mContext);
-                v.setBackground(holder.imgView.getDrawable());
-                Dialog dialog;
-                dialog= new Dialog(mContext);
+                final Dialog dialog;
+                 dialog= new Dialog(mContext);
+
                 dialog.setContentView(R.layout.content_clicked);
+                ImageView imagemN = dialog.findViewById(R.id.img_view);
+                imagemN.setImageResource(imagem);
+                TextView txtclose = (TextView) dialog.findViewById(R.id.txtcloseFilmeClicked);
+
+                txtclose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                       dialog.dismiss();
+                    }
+                });
+
                 dialog.show();
 
             }
@@ -74,6 +88,14 @@ public class HorizontalAdapter extends  RecyclerView.Adapter<HorizontalAdapter.V
             super(itemView);
             imgView = itemView.findViewById(R.id.series);
             layout = itemView.findViewById(R.id.layoutItem);
+        }
+
+        public ImageView getImgView() {
+            return imgView;
+        }
+
+        public void setImgView(ImageView imgView) {
+            this.imgView = imgView;
         }
     }
 }
