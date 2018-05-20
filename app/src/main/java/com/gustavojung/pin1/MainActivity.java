@@ -4,6 +4,7 @@ package com.gustavojung.pin1;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -16,16 +17,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.IdpResponse;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
     Dialog myDialog;
@@ -35,44 +43,60 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ArrayList<Integer> mImageUrls1 = new ArrayList<>();
     private ArrayList<Integer> mImageUrls2 = new ArrayList<>();
     private ArrayList<Integer> mImageUrls3 = new ArrayList<>();
+    private static final int RC_SIGN_IN = 123;
+
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        FirebaseAuth auth = FirebaseAuth.getInstance();
 
+        if (auth.getCurrentUser() != null) {
+            // already signed in
+        } else {
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setAvailableProviders(Arrays.asList(
+                                    new AuthUI.IdpConfig.EmailBuilder().build(),
+                                    new AuthUI.IdpConfig.GoogleBuilder().build()))
+                            .build(),
+                    RC_SIGN_IN);
+        }
 
         addImages();
-
-
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
-        RecyclerView list = (RecyclerView)findViewById(R.id.list);
+        RecyclerView list = (RecyclerView) findViewById(R.id.list);
         list.setLayoutManager(layoutManager);
-        list.setAdapter(new HorizontalAdapter(this,mImageUrls));
+        list.setAdapter(new HorizontalAdapter(this, mImageUrls));
 
 
-        RecyclerView list2 = (RecyclerView)findViewById(R.id.list2);
-        list2.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL,false));
-        list2.setAdapter(new HorizontalAdapter(this,mImageUrls1));
+        RecyclerView list2 = (RecyclerView) findViewById(R.id.list2);
+        list2.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
+        list2.setAdapter(new HorizontalAdapter(this, mImageUrls1));
 
 
-        RecyclerView list3 = (RecyclerView)findViewById(R.id.list3);
-        list3.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL,false));
-        list3.setAdapter(new HorizontalAdapter(this,mImageUrls2));
+        RecyclerView list3 = (RecyclerView) findViewById(R.id.list3);
+        list3.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
+        list3.setAdapter(new HorizontalAdapter(this, mImageUrls2));
 
 
-        RecyclerView list4 = (RecyclerView)findViewById(R.id.list4);
-        list4.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL,false));
-        list4.setAdapter(new HorizontalAdapter(this,mImageUrls3));
+        RecyclerView list4 = (RecyclerView) findViewById(R.id.list4);
+        list4.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
+        list4.setAdapter(new HorizontalAdapter(this, mImageUrls3));
 
-        Toolbar toolbar =  findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setTitle("");
-
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -84,10 +108,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-    public Activity contexto(){
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // RC_SIGN_IN is the request code you passed into startActivityForResult(...) when starting the sign in flow.
+        if (requestCode == RC_SIGN_IN) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+
+            // Successfully signed in
+            if (resultCode == RESULT_OK) {
+
+            } else {
+                // Sign in failed
+                if (response == null) {
+                    // User pressed back button
+                    return;
+                }
+
+                if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+                    return;
+                }
+
+                Log.e("Main activity", "Sign-in error: ", response.getError());
+            }
+        }
+    }
+
+    public Activity contexto() {
         return this;
     }
-    private void addImages(){
+
+    private void addImages() {
         mImageUrls.add(R.drawable.gotham);
         mImageUrls.add(R.drawable.between);
         mImageUrls.add(R.drawable.dexter);
@@ -128,7 +179,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -150,8 +200,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             myDialog.show();
 
-        }
-        else if (id == R.id.nav_camera) {
+        } else if (id == R.id.nav_camera) {
 
             TextView txtclose;
             myDialog.setContentView(R.layout.popup_menu1);
@@ -202,6 +251,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             msg.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    //TODO Achar aonde colocar o signout
+                    FirebaseAuth.getInstance().signOut();
                     finish();
                     System.exit(0);
                 }
@@ -218,17 +269,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             alert.show();
         }
 
-        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    public void recyclerClicked(View v){
+    public void recyclerClicked(View v) {
 
 
         findViewById(R.id.img_view).setBackground(v.getBackground());
-       myDialog.setContentView((R.layout.content_clicked));
-       myDialog.show();
+        myDialog.setContentView((R.layout.content_clicked));
+        myDialog.show();
     }
 
 
