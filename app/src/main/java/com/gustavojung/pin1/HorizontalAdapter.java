@@ -45,7 +45,7 @@ public class HorizontalAdapter extends  RecyclerView.Adapter<HorizontalAdapter.V
 
 
         holder.imgView.setImageResource(mImages.get(position));
-      final  int imagem = mImages.get(position);
+        final  int imagem = mImages.get(position);
 
       holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +68,6 @@ public class HorizontalAdapter extends  RecyclerView.Adapter<HorizontalAdapter.V
                 });
 
                 dialog.show();
-
             }
         });
 

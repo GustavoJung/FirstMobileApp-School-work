@@ -3,14 +3,19 @@ package com.gustavojung.pin1;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.ImageViewCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,30 +25,42 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-
+    String nome_user;
     Dialog myDialog;
     Spinner spinner;
+    Uri img_url;
 
     private ArrayList<Integer> mImageUrls = new ArrayList<>();
     private ArrayList<Integer> mImageUrls1 = new ArrayList<>();
     private ArrayList<Integer> mImageUrls2 = new ArrayList<>();
     private ArrayList<Integer> mImageUrls3 = new ArrayList<>();
     private static final int RC_SIGN_IN = 123;
+    private ImageView mDisplayImageView;
+    private TextView mNameTextView;
+    FirebaseAuth auth;
 
 
     @Override
@@ -53,14 +70,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         myDialog = new Dialog(this);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        TextView name;
+        View header = navigationView.getHeaderView(0);
+
+        auth = FirebaseAuth.getInstance();
 
         if (auth.getCurrentUser() != null) {
-            // already signed in
+            setUserInfo();
         } else {
             startActivityForResult(
                     AuthUI.getInstance()
@@ -70,9 +92,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     new AuthUI.IdpConfig.GoogleBuilder().build()))
                             .build(),
                     RC_SIGN_IN);
-        }
 
-        addImages();
+            if (auth.getCurrentUser() != null) {
+                setUserInfo();
+            }
+        }
+            addImages();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
         RecyclerView list = (RecyclerView) findViewById(R.id.list);
@@ -106,33 +131,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
+
+
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // RC_SIGN_IN is the request code you passed into startActivityForResult(...) when starting the sign in flow.
         if (requestCode == RC_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
-
             // Successfully signed in
             if (resultCode == RESULT_OK) {
-
+                setUserInfo();
+                Toast.makeText(this, "Login realizado com Sucesso", Toast.LENGTH_SHORT).show();
             } else {
                 // Sign in failed
                 if (response == null) {
                     // User pressed back button
                     return;
                 }
-
                 if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
                     return;
                 }
-
-                Log.e("Main activity", "Sign-in error: ", response.getError());
+                Log.e("Main activity", "Erro de conexão: ", response.getError());
             }
         }
+    }
+
+    private void setUserInfo(){
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        TextView name;
+        View header = navigationView.getHeaderView(0);
+        
+        mDisplayImageView = (ImageView) header.findViewById(R.id.foto_usuario);
+        mNameTextView = (TextView) header.findViewById(R.id.nome_usuario);
+        Glide.with(navigationView)
+                .load(auth.getCurrentUser().getPhotoUrl())
+                .into(mDisplayImageView);
+        mNameTextView.setText(auth.getCurrentUser().getDisplayName());
     }
 
     public Activity contexto() {
@@ -248,16 +287,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_manage) {
             AlertDialog.Builder msg = new AlertDialog.Builder(this);
-            msg.setTitle("Deseja fechar o aplicativo?");
+            msg.setTitle("Deseja sair da sua conta?");
             msg.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     //TODO Achar aonde colocar o signout
                     FirebaseAuth.getInstance().signOut();
                     finish();
-                    System.exit(0);
+                    startActivity(new Intent(contexto(),MainActivity.class));
                 }
-            });
+
+                });
 
             msg.setNegativeButton("Não", new DialogInterface.OnClickListener() {
                 @Override
