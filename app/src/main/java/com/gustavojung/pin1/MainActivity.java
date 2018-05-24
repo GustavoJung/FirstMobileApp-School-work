@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         TextView name;
         View header = navigationView.getHeaderView(0);
-        
+
         mDisplayImageView = (ImageView) header.findViewById(R.id.foto_usuario);
         mNameTextView = (TextView) header.findViewById(R.id.nome_usuario);
         Glide.with(navigationView)
