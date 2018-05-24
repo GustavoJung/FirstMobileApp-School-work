@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -134,8 +135,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
     }
-
-
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -315,12 +314,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void recyclerClicked(View v) {
+    public void reproduzir(View v) {
+        Intent intent = new Intent(this, Controle.class);
+        startActivity(intent);
 
-
-        findViewById(R.id.img_view).setBackground(v.getBackground());
-        myDialog.setContentView((R.layout.content_clicked));
-        myDialog.show();
     }
 
 }

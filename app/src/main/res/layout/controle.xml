@@ -39,7 +39,10 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
-                android:background="@drawable/ic_stop_black_24dp"/>
+                android:background="@drawable/ic_stop_black_24dp"
+                android:clickable="true"
+                android:id="@+id/parar"
+                android:onClick="parar"/>
             <Button
                 android:layout_width="50dp"
                 android:layout_height="50dp"

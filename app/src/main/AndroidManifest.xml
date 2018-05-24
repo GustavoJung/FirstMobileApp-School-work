@@ -3,17 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.gustavojung.pin1">
 
-
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <supports-screens
-        android:resizeable="true"
         android:largeScreens="true"
         android:normalScreens="true"
+        android:resizeable="true"
         android:smallScreens="true"
-        android:xlargeScreens="true"/>
-
+        android:xlargeScreens="true" />
 
     <application
         android:allowBackup="true"
@@ -27,9 +24,14 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Controle"
+            android:label="@string/title_activity_controle"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

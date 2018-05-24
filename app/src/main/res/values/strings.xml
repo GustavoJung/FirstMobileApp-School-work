@@ -17,4 +17,5 @@
 
     </string-array>
     <string name="title_activity_searchable">SearchableActivity</string>
+    <string name="title_activity_controle">Controle</string>
 </resources>

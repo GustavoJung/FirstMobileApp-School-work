@@ -33,6 +33,14 @@
             android:layout_height="wrap_content"
             android:gravity="end"
             >
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btReproduzir"
+                android:text="Reproduzir"
+                android:onClick="reproduzir"
+        />
+
         </SearchView>
 
     </LinearLayout>
