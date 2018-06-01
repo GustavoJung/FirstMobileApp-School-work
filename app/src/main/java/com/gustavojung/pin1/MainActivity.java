@@ -6,12 +6,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -39,6 +42,8 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -63,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView mNameTextView;
     FirebaseAuth auth;
 
+    public static final int IMAGE_GALLERY_REQUEST = 20;
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
@@ -136,6 +142,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // RC_SIGN_IN is the request code you passed into startActivityForResult(...) when starting the sign in flow.
@@ -157,7 +165,62 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.e("Main activity", "Erro de conexão: ", response.getError());
             }
         }
+
+        if (resultCode == RESULT_OK) {
+
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            View header = navigationView.getHeaderView(0);
+
+            mDisplayImageView = (ImageView) header.findViewById(R.id.foto_usuario);
+
+            // if we are here, everything processed successfully.
+            if (requestCode == IMAGE_GALLERY_REQUEST) {
+                // if we are here, we are hearing back from the image gallery.
+
+                // the address of the image on the SD Card.
+                Uri imageUri = data.getData();
+
+                // declare a stream to read the image data from the SD Card.
+                InputStream inputStream;
+
+                // we are getting an input stream, based on the URI of the image.
+                try {
+                    inputStream = getContentResolver().openInputStream(imageUri);
+                    // get a bitmap from the stream.
+                    Bitmap image = BitmapFactory.decodeStream(inputStream);
+                    // show the image to the user
+                    mDisplayImageView.setImageBitmap(image);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    // show a message to the user indictating that the image is unavailable.
+                    Toast.makeText(this, "Unable to open image", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }
+
+
     }
+
+    public void onImageGalleryClicked(View v) {
+        // invoke the image gallery using an implict intent.
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+
+        // where do we want to find the data?
+        File pictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        String pictureDirectoryPath = pictureDirectory.getPath();
+        // finally, get a URI representation
+        Uri data = Uri.parse(pictureDirectoryPath);
+
+        // set the data and type.  Get all image types.
+        photoPickerIntent.setDataAndType(data, "image/*");
+
+        // we will invoke this activity, and get something back from it.
+        startActivityForResult(photoPickerIntent, IMAGE_GALLERY_REQUEST);
+    }
+
+
+
 
     private void setUserInfo(){
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);

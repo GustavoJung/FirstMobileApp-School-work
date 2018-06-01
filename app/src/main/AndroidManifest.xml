@@ -4,7 +4,7 @@
     package="com.gustavojung.pin1">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <supports-screens
         android:largeScreens="true"
         android:normalScreens="true"
