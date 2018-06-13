@@ -2,22 +2,33 @@ package com.gustavojung.pin1;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 
 public class HorizontalAdapter extends  RecyclerView.Adapter<HorizontalAdapter.ViewHolder>{
 
@@ -25,6 +36,7 @@ public class HorizontalAdapter extends  RecyclerView.Adapter<HorizontalAdapter.V
 
     private ArrayList<Integer> mImages = new ArrayList<>();
     private Context mContext;
+    SharedPreferences sharedPreferencesConteudo ;
 
     public HorizontalAdapter(Context context, ArrayList<Integer> imageUrls) {
 
@@ -47,30 +59,134 @@ public class HorizontalAdapter extends  RecyclerView.Adapter<HorizontalAdapter.V
         holder.imgView.setImageResource(mImages.get(position));
         final  int imagem = mImages.get(position);
 
-      holder.layout.setOnClickListener(new View.OnClickListener() {
+        holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: clicked on" );
-                Toast.makeText(mContext,"Clicado", Toast.LENGTH_SHORT).show();
                 final Dialog dialog;
-                 dialog= new Dialog(mContext);
+                final Conteudos c =new Conteudos();
 
+
+                dialog = new Dialog(mContext);
                 dialog.setContentView(R.layout.content_clicked);
+
+                final CheckBox checkBox = dialog.findViewById(R.id.checkFav);
+                final TextView descricaoSer = dialog.findViewById(R.id.textodescricao);
+                final TextView nomeSelectedS = dialog.findViewById(R.id.text_nome_serie);
+                final TextView nTemporadas =  dialog.findViewById(R.id.nTemporadas);
+                final RatingBar rating = dialog.findViewById(R.id.rating);
+                final ValueEventListener favorito;
+
+
                 ImageView imagemN = dialog.findViewById(R.id.img_view);
                 imagemN.setImageResource(imagem);
-                TextView txtclose = (TextView) dialog.findViewById(R.id.txtcloseFilmeClicked);
 
+                TextView txtclose = (TextView) dialog.findViewById(R.id.txtcloseFilmeClicked);
                 txtclose.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                       dialog.dismiss();
+                        dialog.dismiss();
+                    }
+                    });
+
+                ValueEventListener getValues = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            for(DataSnapshot uniqueKeySnapshot : dataSnapshot.getChildren()){
+                                    if(String.valueOf(uniqueKeySnapshot.child("id").getValue()).equalsIgnoreCase(String.valueOf(imagem))){
+                                            nomeSelectedS.setText(uniqueKeySnapshot.child("nome").getValue().toString());
+                                            descricaoSer.setText(uniqueKeySnapshot.child("descricao").getValue().toString());
+                                            nTemporadas.setText(uniqueKeySnapshot.child("temporadas").getValue().toString());
+                                            rating.setRating(((Long)uniqueKeySnapshot.child("rating").getValue()));
+                                    }
+                            }
+
+                        }else{
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                };
+                FirebaseDatabase.getInstance().getReference().child("Conteudo").addValueEventListener(getValues);
+
+                 favorito = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                                for (DataSnapshot uniqueKeySnapshot : dataSnapshot.getChildren()) {
+                                    //uniqueKeySnapshot retorna os Ids dos usuários
+                                    if (uniqueKeySnapshot.getKey().toString().equalsIgnoreCase(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                        for (DataSnapshot d : uniqueKeySnapshot.getChildren()) {
+                                            System.out.println(d);
+                                            for (DataSnapshot ds : d.getChildren()) {
+                                                //ds retorna os ints de cada imagem dos favoritos
+                                                if (String.valueOf(ds.getValue()).equalsIgnoreCase(String.valueOf(imagem))) {
+                                                    ((CheckBox) checkBox).setChecked(true);
+                                                    break;
+                                                } else {
+                                                    ((CheckBox)checkBox).setChecked(false);
+                                                }
+                                            }
+                                        }
+                                    }else {
+                                }
+                                }
+                        } else {
+                              }
+
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                };
+                FirebaseDatabase.getInstance().getReference().child("ids").addValueEventListener(favorito);
+
+
+                checkBox.setOnClickListener(new View.OnClickListener() {
+
+                    ValueEventListener removeListener = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                for(DataSnapshot d: dataSnapshot.getChildren()){
+                                    if(String.valueOf(d.getValue()).equalsIgnoreCase(String.valueOf(imagem))){
+                                        d.getRef().setValue(null);
+                                    }
+                                }
+                            }else{
+                            }
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    };
+
+
+                    public void onClick(View v) {
+                        FirebaseDatabase.getInstance().getReference().child("ids").removeEventListener(favorito);
+                        User u = new User();
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        String uid = user.getUid();
+                        DatabaseReference base = FirebaseDatabase.getInstance().getReference().child("ids").child(uid).child("favoritos");
+                        u.setId(uid);
+                        DatabaseReference pushRef = base.push();
+                        System.out.println(pushRef);
+                        if (((CheckBox) v).isChecked()) {
+                            u.getFavoritos().add(String.valueOf(imagem));
+                            pushRef.setValue(String.valueOf(imagem));
+                            Toast.makeText(mContext, "Adicionado aos Favoritos!", Toast.LENGTH_SHORT).show();
+                            FirebaseDatabase.getInstance().getReference().child("ids").child(uid).child("favoritos").removeEventListener(removeListener);
+                        } else {
+                            FirebaseDatabase.getInstance().getReference().child("ids").child(uid).child("favoritos").addValueEventListener(removeListener);
+                            Toast.makeText(mContext, "Removido dos Favoritos!", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
-
                 dialog.show();
+
             }
         });
-
     }
 
     @Override

@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
 
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
@@ -65,6 +64,7 @@
             android:layout_marginLeft="10dp"/>
 
         <TextView
+            android:id="@+id/nTemporadas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="4"
@@ -85,6 +85,7 @@
                 android:layout_marginLeft="10dp"/>
 
             <TextView
+                android:id="@+id/tempoEp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="40 minutos"
@@ -99,11 +100,12 @@
 
 
             <TextView
+                android:id="@+id/textodescricao"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Essa série conta a história de dois alunos  da UDESC que desenvolveram esse APP."
+                android:text=""
                 android:textColor="@color/colrowhite" />
         </LinearLayout>
 
@@ -122,9 +124,11 @@
            <CheckBox
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
+               android:id="@+id/checkFav"
                android:buttonTint="@color/colrowhite"
                android:saveEnabled="true"
-               android:textColor="@color/colrowhite"/>
+               android:textColor="@color/colrowhite"
+               />
 
        </LinearLayout>
         <TextView
@@ -144,6 +148,7 @@
             android:progressBackgroundTint="@color/colrowhite"
             android:progressTint="@color/colorPrimary"
             android:layout_marginBottom="5dp"
+            android:id="@+id/rating"
             />
 
     </LinearLayout>

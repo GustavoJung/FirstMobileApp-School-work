@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
 
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="250dp"
-    android:layout_height="250dp"
+    android:layout_width="300dp"
+    android:layout_height="300dp"
     android:background="@color/colorDarkGray"
     android:layout_gravity="center">
 
@@ -50,11 +50,12 @@
                 android:textColor="@color/colrowhite"></TextView>
 
             <Switch
-                android:id="@+id/switch1"
+                android:id="@+id/toggleSound"
                 android:layout_width="97dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
+                android:textColor="@color/colrowhite"
                 android:text="Ativado" />
 
 
@@ -75,8 +76,9 @@
                 android:textColor="@color/colrowhite"></TextView>
 
             <Switch
-                android:id="@+id/switch2"
+                android:id="@+id/toggleNotes"
                 android:layout_width="97dp"
+                android:textColor="@color/colrowhite"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
                 android:gravity="center"
@@ -100,10 +102,11 @@
                 android:textColor="@color/colrowhite"></TextView>
 
             <Switch
-                android:id="@+id/switch3"
+                android:id="@+id/toggleSaveSearch"
                 android:layout_width="97dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
+                android:textColor="@color/colrowhite"
                 android:gravity="center"
                 android:text="Ativado" />
 
